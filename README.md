@@ -14,7 +14,7 @@ After 4 months, you will have a complete web application composed by:
 
 ## Authors
 * **Cesar Augusto Velez** 
-* **Santiago Agudelo**
+* **Santiago Agudelo Alvarez**
 ## Files
 
 ### Lorem Ipsum
