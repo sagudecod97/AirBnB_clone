@@ -17,13 +17,7 @@ class BaseModel:
         self.updated_at = datetime.now()
 
         args_len = len(args)
-        parameters = ["id", "created_at", "updated_at"]
 
-        for i in range(args_len):
-            if i > len(parameters):
-                break
-            else:
-                setattr(self, parameters[i], args[i])
         if args_len == 0:
             for key, value in kwargs.items():
                 if key == "__class__":
