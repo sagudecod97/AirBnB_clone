@@ -13,7 +13,7 @@ After 4 months, you will have a complete web application composed by:
 
 
 ## Authors
-* **Cesar Velez** 
+* **Cesar Augusto Velez** 
 * **Santiago Agudelo**
 ## Files
 
