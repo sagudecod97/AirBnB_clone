@@ -6,6 +6,7 @@ import uuid
 from datetime import datetime
 from models import storage
 
+
 class BaseModel:
     """A representation of the base of our OOP hierarchy."""
 
@@ -31,12 +32,14 @@ class BaseModel:
 
     def __str__(self):
         """method str."""
-        return "[{}] ({}) {}".format(BaseModel.__name__, self.id, self.__dict__)
+        return "[{}] ({}) {}".format(BaseModel.__name__, self.id,
+                                     self.__dict__)
 
     def save(self):
         """ method save: Updates the time of the property Update_at"""
         self.updated_at = datetime.now()
-        self.updated_at = datetime.isoformat(self.updated_at) #  Cast the self.updated to the rigth format
+        'Cast the self.updated to the right format'
+        self.updated_at = datetime.isoformat(self.updated_at)
         storage.save()
 
     def to_dict(self):
