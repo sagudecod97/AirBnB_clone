@@ -18,6 +18,7 @@ class FileStorage:
     def new(self, obj):
         """Method New."""
         new_obj = obj.__dict__.copy()
+        new_obj["__class__"] = type(obj).__name__
         new_obj["created_at"] = datetime.isoformat(new_obj["created_at"])
         new_obj["updated_at"] = datetime.isoformat(new_obj["updated_at"])
         self.__objects["{}.{}".format(type(obj).__name__, obj.id)] = new_obj
