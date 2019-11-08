@@ -7,7 +7,7 @@ class HBNBCommand(cmd.Cmd):
     """HBNBCommand class."""
     prompt = '(hbnb) '
 
-    # ----- basic commands -----
+    # ------ basic commands ------
     def do_EOF(self, arg):
         """Handles EOF\n"""
         print()
