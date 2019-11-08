@@ -36,8 +36,7 @@ class BaseModel:
     def save(self):
         """ method save: Updates the time of the property Update_at"""
         self.updated_at = datetime.now()
-        """Cast the self.updated to the right format."""
-        self.updated_at = datetime.isoformat(self.updated_at)
+        storage.new(self)
         storage.save()
 
     def to_dict(self):
