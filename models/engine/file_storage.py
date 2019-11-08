@@ -23,7 +23,6 @@ class FileStorage:
     def save(self):
         with open(self.__file_path, 'w', encoding="utf-8") as f:
             new_obj = self.__objects
-            print(new_obj)
             f.write(dumps(new_obj))
 
     def reload(self):
