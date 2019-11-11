@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 """Module for Base class."""
+import copy
 from json import dumps, loads
 import csv
 import uuid
 from datetime import datetime
-
+from models.base_model import BaseModel
 
 class FileStorage:
     """A representation of the base of our OOP hierarchy."""
@@ -17,17 +18,17 @@ class FileStorage:
 
     def new(self, obj):
         """Method New."""
-        new_obj = obj.__dict__.copy()
-        new_obj["__class__"] = type(obj).__name__
-        new_obj["created_at"] = datetime.isoformat(new_obj["created_at"])
-        new_obj["updated_at"] = datetime.isoformat(new_obj["updated_at"])
-        self.__objects["{}.{}".format(type(obj).__name__, obj.id)] = new_obj
+        self.__objects["{}.{}".format(type(obj).__name__, obj.id)] = obj
 
     def save(self):
         """Method Save."""
         with open(self.__file_path, 'w', encoding="utf-8") as f:
-            new_obj = self.__objects
-            f.write(dumps(new_obj))
+            new_obj = copy.deepcopy(self.__objects)
+            dict_write = {}
+
+            for key, value in new_obj.items():
+                dict_write[key] = value.to_dict()
+            f.write(dumps(dict_write))
 
     def reload(self):
         """Method Reload."""
@@ -35,5 +36,14 @@ class FileStorage:
             with open(self.__file_path, 'r', encoding="utf-8") as f:
                 objects = loads(f.read())
                 self.__objects = objects
+                new_dict = {}
+                count = 0
+
+                for key, value in objects.items():
+                    new_dict[key] = value
+                    count += 1
+                for key, value in new_dict.items():
+                    new_dict[key] = BaseModel(**value)
+                self.__objects = new_dict
         except Exception:
             pass
