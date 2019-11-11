@@ -1,10 +1,10 @@
 #!/usr/bin/python3
 """Module for Base class."""
-from json import dumps, loads
-import csv
+import models
+import json
 import uuid
 from datetime import datetime
-import models
+import sys
 
 
 class BaseModel:
@@ -12,37 +12,33 @@ class BaseModel:
 
     def __init__(self, *args, **kwargs):
         """Constructor."""
-
-        self.id = str(uuid.uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-        models.storage.new(self)
-
-        args_len = len(args)
-
-        if args_len == 0:
+        if kwargs is not None and kwargs != {}:
             for key, value in kwargs.items():
-                if key == "__class__":
+                if key in ["created_at", "updated_at"]:
+                    setattr(self, key, datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f'))
+                elif key == "__class__":
                     continue
-                elif key == "created_at":
-                    value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
-                elif key == "updated_at":
-                    value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
-                setattr(self, key, value)
+                else:
+                    setattr(self, key, value)
+        else:
+            self.id = str(uuid.uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+            models.storage.new(self)
 
     def __str__(self):
         """method str."""
-        return "[{}] ({}) {}".format(BaseModel.__name__, self.id, self.__dict__)
+        return "[{}] ({}) {}".format(type(self).__name__, self.id,
+                                     self.__dict__)
 
     def save(self):
         """ method save: Updates the time of the property Update_at"""
         self.updated_at = datetime.now()
-        models.storage.new(self)
         models.storage.save()
 
     def to_dict(self):
-        ret_dict = self.__dict__
-        ret_dict["__class__"] = BaseModel.__name__
+        ret_dict = self.__dict__.copy()
+        ret_dict["__class__"] = type(self).__name__
         ret_dict["created_at"] = str(datetime.isoformat(self.created_at))
         ret_dict["updated_at"] = str(datetime.isoformat(self.updated_at))
 

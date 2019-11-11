@@ -1,16 +1,18 @@
 #!/usr/bin/python3
 """Module for Base class."""
-import copy
 from json import dumps, loads
 import csv
 import uuid
 from datetime import datetime
-from models.base_model import BaseModel
+import models.base_model
+import os
+
 
 class FileStorage:
     """A representation of the base of our OOP hierarchy."""
     __file_path = "file.json"
     __objects = {}
+    __functions = {'BaseModel': models.base_model.BaseModel}
 
     def all(self):
         """Method All."""
@@ -23,27 +25,18 @@ class FileStorage:
     def save(self):
         """Method Save."""
         with open(self.__file_path, 'w', encoding="utf-8") as f:
-            new_obj = copy.deepcopy(self.__objects)
-            dict_write = {}
-
-            for key, value in new_obj.items():
-                dict_write[key] = value.to_dict()
-            f.write(dumps(dict_write))
+            new_obj = {key: value.to_dict() for key, value in self.__objects.items()}
+            f.write(dumps(new_obj))
 
     def reload(self):
         """Method Reload."""
-        try:
-            with open(self.__file_path, 'r', encoding="utf-8") as f:
-                objects = loads(f.read())
-                self.__objects = objects
-                new_dict = {}
-                count = 0
+        if not os.path.isfile(self.__file_path):
+            return
+        if os.path.isfile(self.__file_path) and not os.stat(self.__file_path).st_size:
+            return
+        with open(self.__file_path, 'r', encoding="utf-8") as f:
+            objects = loads(f.read())
+            obj_dict = {key: self.__functions[value["__class__"]](**value)
+                        for key, value in objects.items()}
+            self.__objects = obj_dict
 
-                for key, value in objects.items():
-                    new_dict[key] = value
-                    count += 1
-                for key, value in new_dict.items():
-                    new_dict[key] = BaseModel(**value)
-                self.__objects = new_dict
-        except Exception:
-            pass
