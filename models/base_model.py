@@ -32,8 +32,7 @@ class BaseModel:
 
     def __str__(self):
         """method str."""
-        return "[{}] ({}) {}".format(BaseModel.__name__, self.id,
-                                     self.__dict__)
+        return "[{}] ({}) {}".format(BaseModel.__name__, self.id, self.__dict__)
 
     def save(self):
         """ method save: Updates the time of the property Update_at"""

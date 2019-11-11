@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Module for Base class."""
+import copy
 from json import dumps, loads
 import csv
 import uuid
@@ -22,7 +23,7 @@ class FileStorage:
     def save(self):
         """Method Save."""
         with open(self.__file_path, 'w', encoding="utf-8") as f:
-            new_obj = self.__objects
+            new_obj = copy.deepcopy(self.__objects)
             dict_write = {}
 
             for key, value in new_obj.items():
