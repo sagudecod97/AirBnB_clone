@@ -33,7 +33,7 @@ class BaseModel:
                                      self.__dict__)
 
     def save(self):
-        """ method save: Updates the time of the property Update_at"""
+        """ method save: Updates the time of the property Update_at."""
         self.updated_at = datetime.now()
         models.storage.save()
 
