@@ -126,12 +126,14 @@ class HBNBCommand(cmd.Cmd):
                     copy_destroy = storage.all()
                     flag = 0
                     for key, value in copy_destroy.items():
-                        if key.find(arg_split[1]) != -1:
+                        if key.find(arg_split[1]) != -1 and arg_split[0] in key:
                             k = key
                             flag = 1
                     if flag:
                         del copy_destroy[k]
                         storage.save()
+                    else:
+                        print("** no instance found **")
 
     def do_all(self, arg):
         flag = 0
