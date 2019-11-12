@@ -34,12 +34,13 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def emptyline(self):
-        """anything when type ENTER"""
-    pass
+        """Does nothing when type ENTER alone"""
+        pass
 
     # ------ Instance commands ------
 
     def do_create(self, arg):
+        """ HOLI """
         arr_classes = inspect.getmembers(sys.modules[__name__],
                                          inspect.isclass)
         arg_split = arg.split(' ')
@@ -240,9 +241,5 @@ class HBNBCommand(cmd.Cmd):
                      if key.startswith(arg_split[0] + '.')]
             print(len(count))
 
-
-def main():
+if __name__ == "__main__":
     HBNBCommand().cmdloop()
-
-
-main()
