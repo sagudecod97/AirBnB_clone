@@ -40,6 +40,6 @@ class BaseModel:
     def to_dict(self):
         ret_dict = self.__dict__.copy()
         ret_dict["__class__"] = type(self).__name__
-        ret_dict["created_at"] = str(datetime.isoformat(self.created_at))
-        ret_dict["updated_at"] = str(datetime.isoformat(self.updated_at))
+        ret_dict["created_at"] = ret_dict['created_at'].isoformat()
+        ret_dict["updated_at"] = ret_dict["updated_at"].isoformat()
         return ret_dict
