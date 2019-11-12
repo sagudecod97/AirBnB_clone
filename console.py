@@ -2,10 +2,12 @@
 """Module for HBNBCommand class."""
 import cmd
 import json
-import sys, inspect
+import sys
+import inspect
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 from models import storage
+
 
 class HBNBCommand(cmd.Cmd):
     """HBNBCommand class."""
@@ -28,7 +30,8 @@ class HBNBCommand(cmd.Cmd):
     # ------ Instance commands ------
 
     def do_create(self, arg):
-        arr_classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
+        arr_classes = inspect.getmembers(sys.modules[__name__],
+                                         inspect.isclass)
         arg_split = arg.split(' ')
         if (arg_split[0] == ''):
             print("** class name missing **")
@@ -47,9 +50,10 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, arg):
         flag = 0
-        arr_classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
+        arr_classes = inspect.getmembers(sys.modules[__name__],
+                                         inspect.isclass)
         arg_split = arg.split(' ')
-        if (arg_split[0] == ''):
+        if arg_split[0] == '':
             print("** class name missing **")
         else:
             for k in arr_classes:
@@ -73,15 +77,19 @@ class HBNBCommand(cmd.Cmd):
                 if flag:
                     print("** no instance found **")
                 else:
-                    for key,value in storage.all().items():
-                        if arg_split[1] in key:
+                    for key, value in storage.all().items():
+                        if key.find(arg_split[1]) != -1:
                             print(value)
+                        else:
+                            print("** no instance found **")
 
     def do_destroy(self, arg):
         flag = 0
-        arr_classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
+        arr_classes = inspect.getmembers(sys.modules[__name__],
+                                         inspect.isclass)
         arg_split = arg.split(' ')
-        if (arg_split[0] == ''):
+        k = {}
+        if arg_split[0] == '':
             print("** class name missing **")
         else:
             for k in arr_classes:
@@ -107,11 +115,38 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     copy_destroy = storage.all()
                     flag = 0
-                    for key,value in copy_destroy.items():
-                        if arg_split[1] in key:
+                    for key, value in copy_destroy.items():
+                        if key.find(arg_split[1]) != -1:
+                            k = key
                             flag = 1
                     if flag:
-                        del copy_destroy[key]
+                        del copy_destroy[k]
+                        storage.save()
+
+    def do_all(self, arg):
+        flag = 0
+        ret_obj = {}
+        arr_classes = inspect.getmembers(sys.modules[__name__],
+                                         inspect.isclass)
+
+        if arg != "":
+            arg_split = arg.split(' ')
+            for k in arr_classes:
+                if arg_split[0] in k:
+                    flag = 0
+                    break
+                else:
+                    flag = 1
+            if flag == 1:
+                print("** class doesn't exist **")
+            else:
+                result = [str(obj) for key, obj in storage.all().items()
+                          if type(obj).__name__ == arg_split[0]]
+                print(result)
+        else:
+            result = [str(obj) for key, obj in storage.all().items()]
+            print(result)
+
 
 
 
