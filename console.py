@@ -50,8 +50,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, arg):
         flag = 0
-        arr_classes = inspect.getmembers(sys.modules[__name__],
-                                         inspect.isclass)
+        arr_classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
         arg_split = arg.split(' ')
         if arg_split[0] == '':
             print("** class name missing **")
@@ -67,9 +66,10 @@ class HBNBCommand(cmd.Cmd):
             elif flag == 0 and len(arg_split) == 1:
                 print("** instance id missing **")
 
-            if len(arg_split) > 1:
+            if len(arg_split) == 2:
                 for item in storage.all():
-                    if arg_split[1] in item:
+                    index_str = item.find(arg_split[1])
+                    if index_str != -1 and len(item[index_str:]) == len(arg_split[1]):
                         flag = 0
                         break
                     else:
@@ -80,8 +80,6 @@ class HBNBCommand(cmd.Cmd):
                     for key, value in storage.all().items():
                         if key.find(arg_split[1]) != -1:
                             print(value)
-                        else:
-                            print("** no instance found **")
 
     def do_destroy(self, arg):
         flag = 0
