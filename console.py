@@ -223,8 +223,8 @@ class HBNBCommand(cmd.Cmd):
             if not command_match:
                 return arg
 
-            command = command_match.group(2) + " " + command_match.group(1) + " " + \
-                      command_match.group(3).replace('"', "")
+            command = command_match.group(2) + " " + command_match.group(1) + \
+                " " + command_match.group(3).replace('"', "")
             return command
         command = command_match.group(2) + " " + command_match.group(1)
         return command
