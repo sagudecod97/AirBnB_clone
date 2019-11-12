@@ -83,8 +83,7 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, arg):
         flag = 0
-        arr_classes = inspect.getmembers(sys.modules[__name__],
-                                         inspect.isclass)
+        arr_classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
         arg_split = arg.split(' ')
         k = {}
         if arg_split[0] == '':
@@ -124,8 +123,7 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, arg):
         flag = 0
         ret_obj = {}
-        arr_classes = inspect.getmembers(sys.modules[__name__],
-                                         inspect.isclass)
+        arr_classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
 
         if arg != "":
             arg_split = arg.split(' ')
@@ -144,6 +142,46 @@ class HBNBCommand(cmd.Cmd):
         else:
             result = [str(obj) for key, obj in storage.all().items()]
             print(result)
+
+    def do_update(self, arg):
+        flag = 0
+        arr_classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
+
+        arg_split = arg.split(' ')
+        k = {}
+        if arg_split[0] == '':
+            print("** class name missing **")
+        else:
+            for k in arr_classes:
+                if arg_split[0] in k:
+                    flag = 0
+                    break
+                else:
+                    flag  = 1
+            if flag:
+                print("** class doesn't exist **")
+            elif flag == 0 and len(arg_split) == 1:
+                print("** instance id missing **")
+
+            if len(arg_split) >= 2:
+                for item in storage.all():
+                    index_str = item.find(arg_split[1])
+                    if index_str != -1 and len(item[index_str:]) == len(arg_split[1]):
+                        flag = 0
+                        break
+                    else:
+                        flag = 1
+                if flag:
+                    print("** no instance found **")
+                if len(arg_split) == 2:
+                    print("** attribute name missing **")
+                else:
+                    for key, value in storage.all().items():
+                        v_dict = value.to_dict()
+                        print("Not in: {}".format(arg_split[2] not in v_dict))
+                        print("v_dict[__class__]: {} ---- arg_split[0]: {}".format(v_dict["__class__"], arg_split[0]))
+                        if arg_split[2] not in v_dict and v_dict["__class__"] is arg_split[0]:
+                            print("** value missing **")
 
 
 
