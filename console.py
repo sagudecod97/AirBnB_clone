@@ -188,6 +188,20 @@ class HBNBCommand(cmd.Cmd):
                         if arg_split[2] not in v_dict and \
                                 v_dict["__class__"] == arg_split[0]:
                             print("** value missing **")
+                            return
+
+                    with open("file.json", 'r+', encoding="utf-8") as f:
+                        dic_read = json.loads(f.read())
+                        key = str(arg_split[0]+"."+arg_split[1])
+                        dic_kwargs = dic_read[key]
+                        obj_val = eval(str(arg_split[0]+"(**dic_kwargs)"))
+                        store = storage.all()
+                        print(obj_val)
+                        print(store)
+                        if arg_split[2] not in arr_not_simple:
+                            obj_val[arg_split[2]] =
+
+
 
     def default(self, arg):
         """Counts the instances of a class.
