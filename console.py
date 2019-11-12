@@ -182,24 +182,33 @@ class HBNBCommand(cmd.Cmd):
                     return
                 if len(arg_split) == 2:
                     print("** attribute name missing **")
+                elif len(arg_split) == 3:
+                    print("** value missing **")
                 else:
-                    for key, value in storage.all().items():
-                        v_dict = value.to_dict()
-                        if arg_split[2] not in v_dict and \
-                                v_dict["__class__"] == arg_split[0]:
-                            print("** value missing **")
-                            return
-
                     with open("file.json", 'r+', encoding="utf-8") as f:
                         dic_read = json.loads(f.read())
                         key = str(arg_split[0]+"."+arg_split[1])
-                        dic_kwargs = dic_read[key]
-                        obj_val = eval(str(arg_split[0]+"(**dic_kwargs)"))
+                        dic_kwargs = dic_read[key].copy()
                         store = storage.all()
-                        print(obj_val)
-                        print(store)
+                        arg_spl = arg_split[3][1:-1]
+                        arr_not_simple = ["id", "created_at", "updated_at"]
+
                         if arg_split[2] not in arr_not_simple:
-                            obj_val[arg_split[2]] =
+                            if arg_spl.isdigit():
+                                dic_kwargs[arg_split[2]] = int(arg_spl)
+                            elif '.' in arg_spl:
+                                dic_kwargs[arg_split[2]] = float(arg_spl)
+                            else:
+                                dic_kwargs[arg_split[2]] = arg_spl
+
+                        obj_val = eval(str(arg_split[0]+"(**dic_kwargs)"))
+                        dic_read[key] = dict(dic_kwargs)
+                        store[key] = obj_val
+                        f.seek(0)
+                        f.write(json.dumps(dic_read))
+                        f.truncate()
+
+
 
 
 
