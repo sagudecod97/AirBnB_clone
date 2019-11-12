@@ -179,16 +179,14 @@ class HBNBCommand(cmd.Cmd):
                         flag = 1
                 if flag:
                     print("** no instance found **")
+                    return
                 if len(arg_split) == 2:
                     print("** attribute name missing **")
                 else:
                     for key, value in storage.all().items():
                         v_dict = value.to_dict()
-                        print("Not in: {}".format(arg_split[2] not in v_dict))
-                        print("v_dict[__class__]: {} ---- arg_split[0]: {}".
-                              format(v_dict["__class__"], arg_split[0]))
                         if arg_split[2] not in v_dict and \
-                                v_dict["__class__"] is arg_split[0]:
+                                v_dict["__class__"] == arg_split[0]:
                             print("** value missing **")
 
     def default(self, arg):
