@@ -211,10 +211,6 @@ class HBNBCommand(cmd.Cmd):
                         f.write(json.dumps(dic_read))
                         f.truncate()
 
-
-
-
-
     def default(self, arg):
         """Counts the instances of a class.
         """
@@ -223,8 +219,13 @@ class HBNBCommand(cmd.Cmd):
     def precmd(self, arg):
         command_match = re.search(r"(\w*)\.(\w+)(?:\((?:)\))$", arg)
         if not command_match:
-            return arg
+            command_match = re.search(r"(\w*)\.(\w+)(?:\((\".+\")\))$", arg)
+            if not command_match:
+                return arg
 
+            command = command_match.group(2) + " " + command_match.group(1) + " " + \
+                      command_match.group(3).replace('"', "")
+            return command
         command = command_match.group(2) + " " + command_match.group(1)
         return command
 
