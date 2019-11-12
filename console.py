@@ -74,8 +74,10 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
             elif flag == 0 and len(arg_split) == 1:
                 print("** instance id missing **")
+            elif len(storage.all()) == 0:
+                print("** no instance found **")
 
-            if len(arg_split) == 2:
+            if len(arg_split) >= 2:
                 for item in storage.all():
                     index_str = item.find(arg_split[1])
                     if index_str != -1 and \
@@ -86,6 +88,7 @@ class HBNBCommand(cmd.Cmd):
                         flag = 1
                 if flag:
                     print("** no instance found **")
+                    return
                 else:
                     for key, value in storage.all().items():
                         if key.find(arg_split[1]) != -1:
