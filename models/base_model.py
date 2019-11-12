@@ -15,7 +15,8 @@ class BaseModel:
         if kwargs is not None and kwargs != {}:
             for key, value in kwargs.items():
                 if key in ["created_at", "updated_at"]:
-                    setattr(self, key, datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f'))
+                    setattr(self, key,
+                            datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f'))
                 elif key == "__class__":
                     continue
                 else:
@@ -41,5 +42,4 @@ class BaseModel:
         ret_dict["__class__"] = type(self).__name__
         ret_dict["created_at"] = str(datetime.isoformat(self.created_at))
         ret_dict["updated_at"] = str(datetime.isoformat(self.updated_at))
-
         return ret_dict

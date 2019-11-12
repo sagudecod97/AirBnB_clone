@@ -7,11 +7,21 @@ import inspect
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 from models import storage
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+import re
 
 
 class HBNBCommand(cmd.Cmd):
     """HBNBCommand class."""
     prompt = '(hbnb) '
+    glob_class = [item[0] for item in inspect.getmembers(sys.modules[__name__],
+                                                         inspect.isclass)]
+    arr_classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
 
     # ------ basic commands ------
     def do_EOF(self, arg):
@@ -50,12 +60,11 @@ class HBNBCommand(cmd.Cmd):
 
     def do_show(self, arg):
         flag = 0
-        arr_classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
         arg_split = arg.split(' ')
         if arg_split[0] == '':
             print("** class name missing **")
         else:
-            for k in arr_classes:
+            for k in self.arr_classes:
                 if arg_split[0] in k:
                     flag = 0
                     break
@@ -69,7 +78,8 @@ class HBNBCommand(cmd.Cmd):
             if len(arg_split) == 2:
                 for item in storage.all():
                     index_str = item.find(arg_split[1])
-                    if index_str != -1 and len(item[index_str:]) == len(arg_split[1]):
+                    if index_str != -1 and \
+                            len(item[index_str:]) == len(arg_split[1]):
                         flag = 0
                         break
                     else:
@@ -83,13 +93,12 @@ class HBNBCommand(cmd.Cmd):
 
     def do_destroy(self, arg):
         flag = 0
-        arr_classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
         arg_split = arg.split(' ')
         k = {}
         if arg_split[0] == '':
             print("** class name missing **")
         else:
-            for k in arr_classes:
+            for k in self.arr_classes:
                 if arg_split[0] in k:
                     flag = 0
                     break
@@ -123,11 +132,9 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, arg):
         flag = 0
         ret_obj = {}
-        arr_classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
-
         if arg != "":
             arg_split = arg.split(' ')
-            for k in arr_classes:
+            for k in self.arr_classes:
                 if arg_split[0] in k:
                     flag = 0
                     break
@@ -145,19 +152,17 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, arg):
         flag = 0
-        arr_classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
-
         arg_split = arg.split(' ')
         k = {}
         if arg_split[0] == '':
             print("** class name missing **")
         else:
-            for k in arr_classes:
+            for k in self.arr_classes:
                 if arg_split[0] in k:
                     flag = 0
                     break
                 else:
-                    flag  = 1
+                    flag = 1
             if flag:
                 print("** class doesn't exist **")
             elif flag == 0 and len(arg_split) == 1:
@@ -166,7 +171,8 @@ class HBNBCommand(cmd.Cmd):
             if len(arg_split) >= 2:
                 for item in storage.all():
                     index_str = item.find(arg_split[1])
-                    if index_str != -1 and len(item[index_str:]) == len(arg_split[1]):
+                    if index_str != -1 and \
+                            len(item[index_str:]) == len(arg_split[1]):
                         flag = 0
                         break
                     else:
@@ -179,11 +185,35 @@ class HBNBCommand(cmd.Cmd):
                     for key, value in storage.all().items():
                         v_dict = value.to_dict()
                         print("Not in: {}".format(arg_split[2] not in v_dict))
-                        print("v_dict[__class__]: {} ---- arg_split[0]: {}".format(v_dict["__class__"], arg_split[0]))
-                        if arg_split[2] not in v_dict and v_dict["__class__"] is arg_split[0]:
+                        print("v_dict[__class__]: {} ---- arg_split[0]: {}".
+                              format(v_dict["__class__"], arg_split[0]))
+                        if arg_split[2] not in v_dict and \
+                                v_dict["__class__"] is arg_split[0]:
                             print("** value missing **")
 
+    def default(self, arg):
+        """Counts the instances of a class.
+        """
+        self.precmd(arg)
 
+    def precmd(self, arg):
+        command_match = re.search(r"(\w*)\.(\w+)(?:\((?:)\))$", arg)
+        if not command_match:
+            return arg
+
+        command = command_match.group(2) + " " + command_match.group(1)
+        return command
+
+    def do_count(self, arg):
+        arg_split = arg.split(' ')
+        if not arg_split[0]:
+            print("** class name missing **")
+        elif arg_split[0] not in self.glob_class:
+            print("** class doesn't exist **")
+        else:
+            count = [key for key in storage.all()
+                     if key.startswith(arg_split[0] + '.')]
+            print(len(count))
 
 
 def main():
