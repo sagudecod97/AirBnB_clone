@@ -162,6 +162,7 @@ class HBNBCommand(cmd.Cmd):
             print(result)
 
     def do_update(self, arg):
+        """ Update: Updates an Instance """
         flag = 0
         arg_split = arg.split(' ')
         arg_id = arg_split[1]
