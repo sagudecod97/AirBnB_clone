@@ -116,7 +116,7 @@ class FileStorage(unittest.TestCase):
                 obj = allobjects[obj_id]
                 self.assertEqual(my_model.id, obj.id)
                 self.assertEqual(my_model.name, obj.name)
-                self.assertEqual(my_model.age, obj.my_number)
+                self.assertEqual(my_model.age, obj.age)
                 self.assertEqual(my_model.created_at, obj.created_at)
                 self.assertEqual(my_model.updated_at, obj.updated_at)
 
