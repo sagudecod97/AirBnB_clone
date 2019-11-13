@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """Module for HBNBCommand class."""
+
 import cmd
 import json
 import sys
