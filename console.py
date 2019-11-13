@@ -126,7 +126,8 @@ class HBNBCommand(cmd.Cmd):
                     copy_destroy = storage.all()
                     flag = 0
                     for key, value in copy_destroy.items():
-                        if key.find(arg_split[1]) != -1 and arg_split[0] in key:
+                        if key.find(arg_split[1]) != -1\
+                                and arg_split[0] in key:
                             k = key
                             flag = 1
                     if flag:
