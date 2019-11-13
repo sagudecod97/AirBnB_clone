@@ -160,6 +160,9 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, arg):
         flag = 0
         arg_split = arg.split(' ')
+        arg_id = arg_split[1]
+        if arg_id[0] == '"':
+            arg_id = arg_id[1:-1]
         k = {}
         if arg_split[0] == '':
             print("** class name missing **")
@@ -177,9 +180,9 @@ class HBNBCommand(cmd.Cmd):
 
             if len(arg_split) >= 2:
                 for item in storage.all():
-                    index_str = item.find(arg_split[1])
+                    index_str = item.find(arg_id)
                     if index_str != -1 and \
-                            len(item[index_str:]) == len(arg_split[1]):
+                            len(item[index_str:]) == len(arg_id):
                         flag = 0
                         break
                     else:
@@ -197,16 +200,22 @@ class HBNBCommand(cmd.Cmd):
                         key = str(arg_split[0]+"."+arg_split[1])
                         dic_kwargs = dic_read[key].copy()
                         store = storage.all()
-                        arg_spl = arg_split[3][1:-1]
+                        arg_spl = arg_split[3]
+                        arg_attr = arg_split[2]
                         arr_not_simple = ["id", "created_at", "updated_at"]
 
-                        if arg_split[2] not in arr_not_simple:
+                        if arg_attr[0] == '"':
+                            arg_attr = arg_attr[1:-1]
+                        if arg_spl[0] == '"':
+                            arg_spl = arg_spl[1:-1]
+
+                        if arg_attr not in arr_not_simple:
                             if arg_spl.isdigit():
-                                dic_kwargs[arg_split[2]] = int(arg_spl)
+                                dic_kwargs[arg_attr] = int(arg_spl)
                             elif '.' in arg_spl:
-                                dic_kwargs[arg_split[2]] = float(arg_spl)
+                                dic_kwargs[arg_attr] = float(arg_spl)
                             else:
-                                dic_kwargs[arg_split[2]] = arg_spl
+                                dic_kwargs[arg_attr] = arg_spl
 
                         obj_val = eval(str(arg_split[0]+"(**dic_kwargs)"))
                         dic_read[key] = dict(dic_kwargs)
@@ -223,8 +232,28 @@ class HBNBCommand(cmd.Cmd):
     def precmd(self, arg):
         command_match = re.search(r"(\w*)\.(\w+)(?:\((?:)\))$", arg)
         if not command_match:
-            command_match = re.search(r"(\w*)\.(\w+)(?:\((\".+\")\))$", arg)
+            command_match = re.search(r"(\w*)\.(\w+)(?:\((.+)\))$", arg)
+            if command_match is not None:
+                command_show = re.search(r"(.+)\,\ (.+)\,\ (.+)$",
+                                         command_match.group(3))
+                if command_show is not None:
+                    command = command_match.group(2) + " " + \
+                              command_match.group(1) + " " + \
+                              command_show.group(1).replace('"', '') \
+                              + " " + command_show.group(2) + " " + \
+                              command_show.group(3)
+                    return command
+
             if not command_match:
+                command_match = re.search(r"(\w*)\.(\w+)(?:\((\".+\")\,\ "
+                                          r"(\".+\")\,\  (.+)\))$", arg)
+                if not command_match:
+                    return arg
+
+                command = command_match.group(2) + " " + \
+                    command_match.group(1) + " " + \
+                    command_match.group(3).replace('"', "") + \
+                    " " + command_match.group(4).replace('"', "")
                 return arg
 
             command = command_match.group(2) + " " + command_match.group(1) + \
@@ -243,6 +272,7 @@ class HBNBCommand(cmd.Cmd):
             count = [key for key in storage.all()
                      if key.startswith(arg_split[0] + '.')]
             print(len(count))
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
