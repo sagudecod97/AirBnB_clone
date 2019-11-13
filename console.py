@@ -41,7 +41,7 @@ class HBNBCommand(cmd.Cmd):
     # ------ Instance commands ------
 
     def do_create(self, arg):
-        """ Createas an Instance of the class """
+        """ Create: creates an Instance of the class """
         arr_classes = inspect.getmembers(sys.modules[__name__],
                                          inspect.isclass)
         arg_split = arg.split(' ')
@@ -61,6 +61,7 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
 
     def do_show(self, arg):
+        """ Show: prints the string representation of the instance """
         flag = 0
         arg_split = arg.split(' ')
         if arg_split[0] == '':
