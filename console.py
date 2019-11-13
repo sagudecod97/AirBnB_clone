@@ -41,7 +41,7 @@ class HBNBCommand(cmd.Cmd):
     # ------ Instance commands ------
 
     def do_create(self, arg):
-        """ HOLI """
+        """ Createas an Instance of the class """
         arr_classes = inspect.getmembers(sys.modules[__name__],
                                          inspect.isclass)
         arg_split = arg.split(' ')
