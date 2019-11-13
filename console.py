@@ -192,8 +192,10 @@ class HBNBCommand(cmd.Cmd):
                     flag = 1
             if flag:
                 print("** class doesn't exist **")
+                return
             elif flag == 0 and len(arg_split) == 1:
                 print("** instance id missing **")
+                return
 
             if len(arg_split) >= 2:
                 for item in storage.all():
