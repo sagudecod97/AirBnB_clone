@@ -268,6 +268,7 @@ class HBNBCommand(cmd.Cmd):
         return command
 
     def do_count(self, arg):
+        """ Count: counts the number of instances """
         arg_split = arg.split(' ')
         if not arg_split[0]:
             print("** class name missing **")
