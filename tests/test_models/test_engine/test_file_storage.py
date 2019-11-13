@@ -62,15 +62,15 @@ class FileStorage(unittest.TestCase):
         self.resetStorage()
         with self.assertRaises(TypeError) as e:
             b = FileStorage(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
-        msg = "__init__() takes from 1 to 2 positional arguments but 11 were given"
+        msg = "__init__() takes from 1 to 2 positional " \
+              "arguments but 11 were given"
         self.assertEqual(str(e.exception), msg)
 
     def test_types(self):
+        """Test types of variable storage"""
         try:
-            """create the variable storage, an instance of FileStorage"""
             self.assertIs(type(storage.__file_path), str)
             self.assertIs(type(storage.__objects), dict)
-            """__file_path: string - path to the JSON file (ex: file.json)"""
             self.assertEqual(storage.__file_path, 'file.json')
         except:
             pass
