@@ -75,6 +75,7 @@ class HBNBCommand(cmd.Cmd):
                     flag = 1
             if flag:
                 print("** class doesn't exist **")
+                return
             elif flag == 0 and len(arg_split) == 1:
                 print("** instance id missing **")
             elif len(storage.all()) == 0:
