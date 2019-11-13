@@ -98,6 +98,7 @@ class HBNBCommand(cmd.Cmd):
                             print(value)
 
     def do_destroy(self, arg):
+        """ Destroy: Destroys an Instance """
         flag = 0
         arg_split = arg.split(' ')
         k = {}
