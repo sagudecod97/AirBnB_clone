@@ -140,6 +140,7 @@ class HBNBCommand(cmd.Cmd):
                         print("** no instance found **")
 
     def do_all(self, arg):
+        """ All: Prints all the instances """
         flag = 0
         ret_obj = {}
         if arg != "":
