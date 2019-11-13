@@ -130,6 +130,16 @@ class FileStorage(unittest.TestCase):
         storage.reload()
         self.assertNotEqual(len(storage.all()), 0)
 
+    def test__objects_exists(self):
+        """ test that objects exist """
+
+        self.assertTrue(isinstance(storage._FileStorage__objects, dict))
+
+    def test__file_path_exists(self):
+        """ test that path file exist """
+
+        self.assertTrue(isinstance(storage._FileStorage__file_path, str))
+
 
 if __name__ == '__main__':
     unittest.main()
