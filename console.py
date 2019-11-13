@@ -102,6 +102,10 @@ class HBNBCommand(cmd.Cmd):
         """ Destroy: Destroys an Instance """
         flag = 0
         arg_split = arg.split(' ')
+        if len(arg_split) > 1:
+            arg_id = arg_split[1]
+        else:
+            arg_id = "NOT AN ID"
         k = {}
         if arg_split[0] == '':
             print("** class name missing **")
@@ -114,12 +118,15 @@ class HBNBCommand(cmd.Cmd):
                     flag = 1
             if flag:
                 print("** class doesn't exist **")
+                return
             elif flag == 0 and len(arg_split) == 1:
                 print("** instance id missing **")
+                return
 
-            if len(arg_split) > 1:
+            if len(arg_split) >= 1:
                 for item in storage.all():
-                    if arg_split[1] in item:
+                    index_id = item.find(arg_id)
+                    if index_id != -1 and len(item[index_id:]) == len(arg_id):
                         flag = 0
                         break
                     else:
