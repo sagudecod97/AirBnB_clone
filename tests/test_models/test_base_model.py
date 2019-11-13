@@ -24,7 +24,8 @@ class TestBaseModel(unittest.TestCase):
         """Tests instantiation of BaseModel class."""
 
         inst = BaseModel()
-        self.assertEqual(str(type(inst)), "<class 'models.base_model.BaseModel'>")
+        self.assertEqual(str(type(inst)),
+                         "<class 'models.base_model.BaseModel'>")
         self.assertIsInstance(inst, BaseModel)
         self.assertTrue(issubclass(type(inst), BaseModel))
 
@@ -121,9 +122,12 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(to_dict_json["id"], to_dict.id)
         self.assertEqual(to_dict_json["age"], to_dict.age)
         self.assertEqual(to_dict_json["__class__"], type(to_dict).__name__)
-        self.assertEqual(to_dict_json["created_at"], to_dict.created_at.isoformat())
-        self.assertEqual(to_dict_json["created_at"], to_dict.created_at.isoformat())
-        self.assertEqual(to_dict_json["updated_at"], to_dict.updated_at.isoformat())
+        self.assertEqual(to_dict_json["created_at"],
+                         to_dict.created_at.isoformat())
+        self.assertEqual(to_dict_json["created_at"],
+                         to_dict.created_at.isoformat())
+        self.assertEqual(to_dict_json["updated_at"],
+                         to_dict.updated_at.isoformat())
 
 
 if __name__ == '__main__':
