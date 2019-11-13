@@ -173,7 +173,11 @@ class HBNBCommand(cmd.Cmd):
         """ Update: Updates an Instance """
         flag = 0
         arg_split = arg.split(' ')
-        arg_id = arg_split[1]
+        if len(arg_split) > 1:
+            arg_id = arg_split[1]
+        else:
+            arg_id = "NOT AN ID"
+
         if arg_id[0] == '"':
             arg_id = arg_id[1:-1]
         k = {}
