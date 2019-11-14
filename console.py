@@ -24,7 +24,6 @@ class HBNBCommand(cmd.Cmd):
                                                          inspect.isclass)]
     arr_classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
 
-
     # ------ basic commands ------
     def do_EOF(self, arg):
         """Handles EOF\n"""
@@ -295,7 +294,8 @@ class HBNBCommand(cmd.Cmd):
             if key not in storage.all():
                 print("** no instance found **")
             else:
-                attr = inspect.getmembers(classname, lambda a: not (inspect.isroutine(a)))
+                attr = inspect.getmembers(classname, lambda a:
+                                          not (inspect.isroutine(a)))
                 for attribute, value in j_dict.items():
                     if attribute in attr:
                         value = attr[attribute](value)
