@@ -24,6 +24,7 @@ class HBNBCommand(cmd.Cmd):
                                                          inspect.isclass)]
     arr_classes = inspect.getmembers(sys.modules[__name__], inspect.isclass)
 
+
     # ------ basic commands ------
     def do_EOF(self, arg):
         """Handles EOF\n"""
@@ -247,37 +248,57 @@ class HBNBCommand(cmd.Cmd):
         self.precmd(arg)
 
     def precmd(self, arg):
-        command_match = re.search(r"(\w*)\.(\w+)(?:\((?:)\))$", arg)
-        if not command_match:
-            command_match = re.search(r"(\w*)\.(\w+)(?:\((.+)\))$", arg)
-            if command_match is not None:
-                command_show = re.search(r"(.+)\,\ (.+)\,\ (.+)$",
-                                         command_match.group(3))
-                if command_show is not None:
-                    command = command_match.group(2) + " " + \
-                              command_match.group(1) + " " + \
-                              command_show.group(1).replace('"', '') \
-                              + " " + command_show.group(2) + " " + \
-                              command_show.group(3)
-                    return command
+        """Transform commands for class.syntax()"""
 
-            if not command_match:
-                command_match = re.search(r"(\w*)\.(\w+)(?:\((\".+\")\,\ "
-                                          r"(\".+\")\,\  (.+)\))$", arg)
-                if not command_match:
-                    return arg
+        cmd_match = re.search(r"^(\w*)\.(\w+)(?:\(([^)]*)\))$", arg)
+        if not cmd_match:
+            return arg
+        cname = cmd_match.group(1)
+        method = cmd_match.group(2)
+        args = cmd_match.group(3)
+        get_id_and_args = re.search('^"([^"]*)"(?:, (.*))?$', args)
+        if get_id_and_args:
+            cid = get_id_and_args.group(1)
+            attr_or_dict = get_id_and_args.group(2)
+        else:
+            cid = args
+            attr_or_dict = False
 
-                command = command_match.group(2) + " " + \
-                    command_match.group(1) + " " + \
-                    command_match.group(3).replace('"', "") + \
-                    " " + command_match.group(4).replace('"', "")
-                return arg
-
-            command = command_match.group(2) + " " + command_match.group(1) + \
-                " " + command_match.group(3).replace('"', "")
-            return command
-        command = command_match.group(2) + " " + command_match.group(1)
+        attr_and_value = ""
+        if method == "update" and attr_or_dict:
+            upt_dict = re.search('^({.*})$', attr_or_dict)
+            if upt_dict:
+                self.update_dict(cname, cid, upt_dict.group(1))
+                return ""
+            get_attr_and_value = re.search(
+                '^(?:"([^"]*)")?(?:, (.*))?$', attr_or_dict)
+            if get_attr_and_value:
+                attr_and_value = (get_attr_and_value.group(
+                    1) or "") + " " + (get_attr_and_value.group(2) or "")
+        command = method + " " + cname + " " + cid + " " + attr_and_value
         return command
+
+    def update_dict(self, classname, cid, attr_dict):
+        """method for update() with a dictionary."""
+        s_dict = attr_dict.replace("'", '"')
+        j_dict = json.loads(s_dict)
+        if not classname:
+            print("** class name missing **")
+        elif classname not in self.glob_class:
+            print("** class doesn't exist **")
+        elif cid is None:
+            print("** instance id missing **")
+        else:
+            key = "{}.{}".format(classname, cid)
+            if key not in storage.all():
+                print("** no instance found **")
+            else:
+                attr = inspect.getmembers(classname, lambda a: not (inspect.isroutine(a)))
+                for attribute, value in j_dict.items():
+                    if attribute in attr:
+                        value = attr[attribute](value)
+                    setattr(storage.all()[key], attribute, value)
+                storage.all()[key].save()
 
     def do_count(self, arg):
         """ Count: counts the number of instances """

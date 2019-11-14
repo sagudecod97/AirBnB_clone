@@ -1,141 +1,90 @@
 # AirBnB clone - The console
 
+<p align="center">
+    <img src="https://holbertonintranet.s3.amazonaws.com/uploads/medias/2018/6/65f4a1dd9c51265f49d0.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIARDDGGGOUXW7JF5MT%2F20191113%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20191113T182855Z&X-Amz-Expires=86400&X-Amz-SignedHeaders=host&X-Amz-Signature=0670a9ab3531d146efe74db3e4ee5cafecf368c0c39688a448af088772c3a7ba">
+</p>
+
 ## Description
-The goal of the project is to deploy on your server a simple copy of the AirBnB website.
-You won’t implement all the features, only some of them to cover all fundamental concepts of the higher level programming track.
 
-After 4 months, you will have a complete web application composed by:
+This team project is part of the Holberton School Full-Stack Software Engineer program.
+This is the first step towards building a first full web application: an AirBnB clone.
+This step consists of a command interpreter limited to a specific use-case.
+We're to be able to manages:
 
-    A command interpreter to manipulate data without a visual interface, like in a Shell (perfect for development and debugging)
-    A website (the front-end) that shows the final product to everybody: static and dynamic
-    A database or files that store data (data = objects)
-    An API that provides a communication interface between the front-end and your data (retrieve, create, delete, update them)
+    Create a new object (ex: a new User or a new Place)
+    Retrieve an object from a file
+    Do operations on objects (count, compute stats)
+    Update attributes of an object
+    Destroy an object
 
+## Install
+    Clone the repository
+
+https://github.com/cavb28/AirBnB_clone.git
+
+    How to it
+
+Get into the AirBnB_clone folder and Run the executable file ./console, the command prompt now appears: (hbnb)
+
+
+## Usage
+
+This shell should work in interactive mode and also in non-interactive mode: (like the Shell project in C).
+It prints a prompt **(hbnb)** and waits for the user for input.
+
+Command | Example
+------- | -------
+Run the console | ```./console.py```
+Quit command to exit the program | ```(hbnb) quit```
+EOF to exit the program | ```(hbnb) EOF```
+Display the help for the console | ```(hbnb) help``` or ```(hbnb) ?```
+Display the help for a command | ```(hbnb) help <command>```
+Create an object and prints id generated | ```(hbnb) create <class>```
+Show an object | ```(hbnb) show <class> <id>``` or ```(hbnb) <class>.show(<id>)```
+Destroy an object | ```(hbnb) destroy <class> <id>``` or ```(hbnb) <class>.destroy(<id>)```
+Show all objects, or all instances of a class | ```(hbnb) all``` or ```(hbnb) all <class>```
+Count instances of a class | ```<class name>.count()```
+Update an attribute of an object | ```(hbnb) update <class> <id> <attribute name> "<attribute value>"``` or ```(hbnb) <class>.update(<id>, <attribute name>, "<attribute value>")```
+
+Non-interactive mode example
+
+```bash
+$ echo "help" | ./console.py
+(hbnb)
+
+Documented commands (type help <topic>):
+========================================
+EOF  all  count  create  destroy  help  quit  show  update
+```
+## FileStorage
+
+The folder [engine](/models/engine) manages serialization and deserialization of the data.
+A FileStorage class is defined in [file_storage.py](/models/engine/file_storage.py) with methods to follow this model:
+```<object> -> to_dict() -> <dictionary> -> JSON dump -> <json string> -> FILE -> <json string> -> JSON load -> <dictionary> -> <object>```
+
+The file [__init__.py](/models/__init__.py) contains the instantiation of FileStorage class storage, followed by a call to the method reload() on that instance.
+This allows the storage to be reloaded automatically at initialization, which recovers the serialized data.
+
+## Models
+
+The folder [models](/models) contains all the classes used in this project.
+
+File | Description | Attributes
+---- | ----------- | ----------
+[base_model.py](/models/base_model.py) | BaseModel class defines common attributes/methods for other classes | id, created_at, updated_at
+[amenity.py](/models/amenity.py) | Amenity class for amenity information | name
+[city.py](/models/city.py) | City class for location (city) information | state_id, name
+[place.py](/models/place.py) | Place class for lodgings information | city_id, user_id, name, description, number_rooms, number_bathrooms, max_guest, price_by_night, latitude, longitude, amenity_ids
+[review.py](/models/review.py) | Review class for user review information | place_id, user_id, text
+[state.py](/models/state.py) | State class for location (state) information | name
+[user.py](/models/user.py) | User class for host information | email, password, first_name, last_name
+
+## Tests
+
+The code is tested with the unittest module.
+The test for the classes are in the folder [test_models](/tests/test_models).
 
 ## Authors
-* **Cesar Augusto Velez**
-* **Santiago Agudelo Alvarez**
-## Files
 
-### Lorem Ipsum
-Dummy text of the printing and typesetting industry
-
-### _quisquam.c
-Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-when an unknown printer took a galley of type and scrambled it to make a
-type specimen book. It has survived not only five centuries, but also the
-leap into electronic typesetting, remaining essentially unchanged.
-
-### dolorem.h
-Header file.
-* Prototypes and
-* Struct definition
-
-### size_printf.c
-* Main size function.
-* Handling of format string
-* Call through struct to auxiliary size functions
-
-### str_printf.c
-Main string write function
-Handling of format string
-Call through struct to auxiliary string generation functions
-
-### _printf_func_0.c
-Auxiliary size and string generation function for
-* characters (c) and
-* strings (s)
-
-### _printf_func_1.c
-Auxiliary size and string generation functions for
-* decimals (d) and
-* integers (i)
-
-### _printf_func_2.c
-Auxiliary size and string generation function for
-* bynary (b),
-* unsigned (u) and
-* octal (o) numbers.
-
-### _printf_func_3.c
-Auxiliary size and string generation function for
-* unsigned (u) and
-* hexadecimal (x, X) numbers.
-
-### _printf_func_14.c
-Auxiliary string generation function for
-* reverse string (r).
-
-### _printf_func_15.c
-Auxiliary string generation function for
-* string rot13 conversion (R).
-
-### number_printf.c
-Auxiliary function for numbers sizing and number conversion acording to base (b, o , x, X).
-## Task
-### Task 0
-I'm not going anywhere. You can print that wherever you want to. I'm here and I'm a Spur for life
-
-Function that produces output according to a format.
-
-Prototype: int _printf(const char *format, ...);
-Returns: the number of characters printed (excluding the null byte used to end output to strings)
-write output to stdout, the standard output stream
-format is a character string. The format string is composed of zero or more directives. See man 3 printf for more detail.
-Handles the following conversion specifiers:
-c
-s
-%
-
-
-### Task 1
-Education is when you read the fine print. Experience is what you get if you don't
-
-Handles the following conversion specifiers:
-d
-i
-
-
-### Task 2
-Just because it's in print doesn't mean it's the gospel
-
-Man page for the function.
-
-### Task 3
-With a face like mine, I do better in print.
-
-Handles the following custom conversion specifiers:
-
-b: the unsigned int argument is converted to binary
-
-
-### Task 4
-What one has not experienced, one will never understand in print
-
-Handls the following conversion specifiers:
-u
-o
-x
-X
-
-### Task 5
-Nothing in fine print is ever good news
-
-Uses a local buffer in order to call write as little as possible.
-
-
-
-### Task 14
-Print is the sharpest and the strongest weapon of our party
-
-Handles the following custom conversion specifier:
-
-r : prints the reversed string
-
-
-### Task 15
-The flood of print has turned reading into a process of gulping rather than savoring
-
-Handles the following custom conversion specifier:
-
-R: prints the rot13'ed string
+* **Cesar Velez** - [cavb.28@gmail.com](https://github.com/cavb28)
+* **Santiago Agudelo** - [sagudecod97@gmail.com](https://github.com/sagudecod97@gmail.com)
